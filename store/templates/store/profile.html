@@ -1,0 +1,75 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Profile - Street Access{% endblock %}
+
+{% block content %}
+<div class="profile-grid">
+    <section class="profile-card">
+        <div class="profile-hero">
+            <div class="profile-avatar">{{ user.username|first|upper }}</div>
+            <div>
+                <h2>{{ user.username }}</h2>
+                <p class="muted">Member since {{ user.date_joined|date:"F d, Y" }}</p>
+            </div>
+        </div>
+
+        {% if profile_updated %}
+        <div class="success-message">Profile updated successfully.</div>
+        {% endif %}
+        {% if profile_error %}
+        <div class="error-message">{{ profile_error }}</div>
+        {% endif %}
+
+        <form method="post" class="profile-form">
+            {% csrf_token %}
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" value="{{ user.username }}" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ user.email }}" required>
+
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}">
+
+            <label for="last_name">Last Name</label>
+            <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}">
+
+            <button type="submit" class="btn btn-primary">Save Profile</button>
+        </form>
+    </section>
+
+    <section class="orders-card">
+        <h3>📦 Your Orders ({{ orders|length }})</h3>
+        {% if orders %}
+        <div class="orders-list">
+            {% for order in orders %}
+            <div class="order">
+                <div class="order-header">
+                    <div>
+                        <h4>Order #{{ order.id }}</h4>
+                        <p class="muted">{{ order.created_at|date:"M d, Y - g:i A" }}</p>
+                    </div>
+                    <div class="order-total">${{ order.total }}</div>
+                </div>
+                <div class="order-items">
+                    {% for item in order.items.all %}
+                    <div class="order-item">
+                        <span>{{ item.quantity }}x {{ item.product.name }}</span>
+                        <span>${{ item.price }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p style="font-size: 3rem; margin-bottom: 1rem;">🎁</p>
+            <h3>No orders yet</h3>
+            <p>Start shopping to make your first purchase!</p>
+            <a href="/products/" class="btn" style="margin-top: 1.5rem;">Browse Products</a>
+        </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

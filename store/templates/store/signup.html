@@ -1,0 +1,71 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Sign Up - Street Access{% endblock %}
+
+{% block content %}
+<form id="signup-form">
+    {% csrf_token %}
+    <h2>Join Street Access</h2>
+    <p style="text-align: center; color: #6b7280;">Create your account to start shopping</p>
+    
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" required>
+    
+    <label for="password1">Password</label>
+    <input type="password" id="password1" name="password1" required>
+    <small style="color: #6b7280;">Must be at least 8 characters</small>
+    
+    <label for="password2">Confirm Password</label>
+    <input type="password" id="password2" name="password2" required>
+    
+    <button type="submit" id="submit-btn">Create Account</button>
+    
+    <div id="loading" style="display:none;">
+        <div style="text-align: center;">
+            <p>🔄 Creating account...</p>
+        </div>
+    </div>
+    <div id="error"></div>
+    
+    <p style="text-align: center; margin-top: 1.5rem;">
+        Already have an account? <a href="/login/" style="color: #7c3aed; text-decoration: none; font-weight: 600;">Login</a>
+    </p>
+</form>
+
+<script>
+document.getElementById('signup-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    document.getElementById('submit-btn').style.display = 'none';
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('error').innerHTML = '';
+    
+    const formData = new FormData(this);
+    fetch('/signup/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('loading').style.display = 'none';
+        if (data.success) {
+            window.location.href = '/';
+        } else {
+            document.getElementById('submit-btn').style.display = 'block';
+            let errors = '<p class="error-message">❌ ';
+            for (let field in data.errors) {
+                if (Array.isArray(data.errors[field])) {
+                    errors += data.errors[field].join(', ');
+                } else {
+                    errors += data.errors[field];
+                }
+            }
+            errors += '</p>';
+            document.getElementById('error').innerHTML = errors;
+        }
+    });
+});
+</script>
+{% endblock %}

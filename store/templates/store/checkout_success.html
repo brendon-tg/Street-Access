@@ -1,0 +1,20 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Order Confirmed - Street Access{% endblock %}
+
+{% block content %}
+<div class="success-container">
+    <div class="success-icon">✅</div>
+    <h2>Order Confirmed!</h2>
+    <p style="font-size: 1.1rem; color: #6b7280;">Thank you for your purchase. Your order has been successfully placed.</p>
+    
+    <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); margin: 2rem 0;">
+        <p style="color: #6b7280;">We've sent a confirmation email to your address. You can track your order in your profile.</p>
+    </div>
+    
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="/profile/" class="btn btn-success">View Order</a>
+        <a href="/products/" class="btn">Continue Shopping</a>
+    </div>
+</div>
+{% endblock %}

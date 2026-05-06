@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Street Access{% endblock %}</title>
+    <link rel="stylesheet" href="/static/store/css/style.css">
+</head>
+<body>
+    <header>
+        <div>
+            <h1>Street Access</h1>
+            <nav>
+                <a href="/">Home</a>
+                <a href="/products/">Shop</a>
+                {% if user.is_authenticated %}
+                    <a href="/cart/" class="cart-link">Cart <span class="cart-badge" id="cart-count" aria-live="polite" aria-atomic="true" aria-label="{{ cart_count|default:0 }} items in cart">{{ cart_count|default:0 }}</span></a>
+                    <a href="/profile/" class="profile-link"><span class="avatar">{{ user.username|slice:":1"|upper }}</span>{{ user.username }}</a>
+                    <a href="/admin/logout/" class="btn btn-danger nav-btn">Logout</a>
+                {% else %}
+                    <a href="/login/">Login</a>
+                    <a href="/signup/">Sign Up</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <script src="/static/store/js/script.js"></script>
+</body>
+</html>

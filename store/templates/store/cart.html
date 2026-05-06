@@ -1,0 +1,66 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Shopping Cart - Street Access{% endblock %}
+
+{% block content %}
+<h2>🛒 Your Shopping Cart</h2>
+
+{% if items %}
+<div class="checkout-container">
+    <div class="checkout-items">
+        <h3>Items in Cart</h3>
+        <div class="cart-items">
+            {% for item in items %}
+            <div class="cart-item">
+                <div>
+                    <h4>{{ item.product.name }}</h4>
+                    <p style="color: #7c3aed; font-weight: 600;">${{ item.product.price }}</p>
+                </div>
+                <div style="text-align: center;">
+                    <p style="font-weight: 600;">{{ item.quantity }}</p>
+                </div>
+                <div style="text-align: center;">
+                    <p style="font-weight: 600;">${{ item.subtotal }}</p>
+                </div>
+                <form method="post" action="/update_cart/{{ item.product.id }}/" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1" style="width: 60px;">
+                    <button type="submit" class="btn-secondary" style="padding: 0.5rem 1rem;">Update</button>
+                </form>
+                <a href="/remove_from_cart/{{ item.product.id }}/" class="btn btn-danger">Remove</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="checkout-summary">
+        <h3>Order Summary</h3>
+        <div class="summary-item">
+            <span>Items ({{ items|length }}):</span>
+            <span>${{ total }}</span>
+        </div>
+        <div class="summary-item">
+            <span>Shipping:</span>
+            <span>Free</span>
+        </div>
+        <div class="summary-total">
+            <span>Total:</span>
+            <span>${{ total }}</span>
+        </div>
+        <a href="/checkout/" class="btn btn-success" style="width: 100%; text-align: center; margin-top: 1.5rem; padding: 1rem;">
+            Proceed to Checkout
+        </a>
+        <a href="/products/" class="btn btn-secondary" style="width: 100%; text-align: center; margin-top: 1rem; padding: 1rem;">
+            Continue Shopping
+        </a>
+    </div>
+</div>
+{% else %}
+<div class="empty-state">
+    <p style="font-size: 3rem; margin-bottom: 1rem;">🛒</p>
+    <h3>Your cart is empty</h3>
+    <p>Add some street wear to get started!</p>
+    <a href="/products/" class="btn" style="margin-top: 1.5rem;">Start Shopping</a>
+</div>
+{% endif %}
+{% endblock %}
